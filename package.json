@@ -1,5 +1,5 @@
 {
-  "name": "cdk-projen-evinova",
+  "name": "cdk-projen",
   "scripts": {
     "build": "npx projen build",
     "bundle": "npx projen bundle",
