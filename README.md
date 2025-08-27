@@ -1,9 +1,9 @@
-# cdk-projen
+# CDK-PROJEN
 
 Minimal, production-style **Infrastructure as Code** using **AWS CDK (TypeScript)** scaffolded with **Projen**.  
 It deploys a tiny, cost-safe cloud foundation suitable for ML/DS workloads and demonstrates good IaC hygiene (tests, CI, reproducible synth, teardown).
 
-![cdk-synth-diff](https://github.com/chhuang216/cdk-projen/actions/workflows/cdk.yml/badge.svg)
+[![build](https://github.com/chhuang216/cdk-projen/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/chhuang216/cdk-projen/actions/workflows/build.yml)
 
 ---
 
