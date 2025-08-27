@@ -1,5 +1,4 @@
-# .github/workflows/build.yml
-name: cdk-synth-diff
+name: build
 
 on:
   push:
@@ -13,49 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Detect package manager
-        id: pm
+      - name: Print env
         run: |
-          if [ -f yarn.lock ]; then
-            echo "mgr=yarn" >> $GITHUB_OUTPUT
-          else
-            echo "mgr=npm" >> $GITHUB_OUTPUT
-          fi
-
+          node -v
+          npm -v
       - name: Install deps
-        run: |
-          if [ "${{ steps.pm.outputs.mgr }}" = "yarn" ]; then
-            corepack enable
-            yarn install --frozen-lockfile
-          else
-            npm ci || npm i
-          fi
-
+        run: npm ci
       - name: Projen synth
         run: npx projen
-
-      - name: Build & test
-        run: |
-          if [ "${{ steps.pm.outputs.mgr }}" = "yarn" ]; then
-            yarn build
-          else
-            npm run build
-          fi
-
+      - name: Build & tests
+        run: npm run build
       - name: CDK synth
         run: npx cdk synth
-
-      - name: CDK diff (do not fail CI)
+      - name: CDK diff (don’t fail CI)
         run: npx cdk diff --no-color > cdk-diff.txt || true
-
-      - name: Upload diff artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: cdk-diff
           path: cdk-diff.txt
