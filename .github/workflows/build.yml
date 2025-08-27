@@ -10,15 +10,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      AWS_REGION: us-east-1
+      CDK_NEW_BOOTSTRAP: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Print env
-        run: |
-          node -v
-          npm -v
+          cache: 'npm'
       - name: Install deps
         run: npm ci
       - name: Projen synth
@@ -26,10 +27,11 @@ jobs:
       - name: Build & tests
         run: npm run build
       - name: CDK synth
-        run: npx cdk synth
-      - name: CDK diff (don’t fail CI)
+        run: npx cdk synth -q
+      - name: CDK diff (do not fail CI)
         run: npx cdk diff --no-color > cdk-diff.txt || true
-      - uses: actions/upload-artifact@v4
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v4
         with:
           name: cdk-diff
           path: cdk-diff.txt
