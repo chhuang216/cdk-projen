@@ -1,0 +1,24 @@
+name: cdk-synth-diff
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  synth-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci || npm i
+      - run: npm install -g aws-cdk
+      - run: npx projen && npm run build
+      - run: npx cdk synth
+      - run: npx cdk diff --no-color > cdk-diff.txt || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cdk-diff
+          path: cdk-diff.txt
